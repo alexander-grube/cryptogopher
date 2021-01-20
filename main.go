@@ -11,10 +11,10 @@ import (
 )
 
 func setupRoutes(app *fiber.App) {
-	app.Get("/api/v1/book", gopher.GetGophers)
-	app.Get("/api/v1/book/:id", gopher.GetGopher)
-	app.Post("/api/v1/book", gopher.NewGopher)
-	app.Delete("/api/v1/book/:id", gopher.DeleteGopher)
+	app.Get("/api/v1/gopher", gopher.GetGophers)
+	app.Get("/api/v1/gopher/:id", gopher.GetGopher)
+	app.Post("/api/v1/gopher", gopher.NewGopher)
+	app.Delete("/api/v1/gopher/:id", gopher.DeleteGopher)
 }
 
 func initDatabase() {
