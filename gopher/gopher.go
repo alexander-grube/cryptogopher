@@ -45,7 +45,7 @@ func DeleteGopher(c *fiber.Ctx) {
 	var gopher Gopher
 	db.First(&gopher, id)
 	if gopher.Name == "" {
-		c.Status(500).Send("No Book Found with ID")
+		c.Status(500).Send("No Gopher Found with ID")
 		return
 	}
 	db.Delete(&gopher)
