@@ -1,6 +1,9 @@
 package gopher
 
 import (
+	"crypto/rand"
+	"encoding/base64"
+
 	"github.com/alexander-grube/cryptogopher/database"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jinzhu/gorm"
@@ -11,6 +14,31 @@ import (
 type Gopher struct {
 	gorm.Model
 	Name string `json:"name"`
+	Seed string
+}
+
+// GenerateRandomBytes returns securely generated random bytes.
+// It will return an error if the system's secure random
+// number generator fails to function correctly, in which
+// case the caller should not continue.
+func GenerateRandomBytes(n int) ([]byte, error) {
+	b := make([]byte, n)
+	_, err := rand.Read(b)
+	if err != nil {
+		return nil, err
+	}
+
+	return b, nil
+}
+
+// GenerateRandomString returns a URL-safe, base64 encoded
+// securely generated random string.
+// It will return an error if the system's secure random
+// number generator fails to function correctly, in which
+// case the caller should not continue.
+func GenerateRandomString(s int) (string, error) {
+	b, err := GenerateRandomBytes(s)
+	return base64.URLEncoding.EncodeToString(b), err
 }
 
 // GetGophers returns all Gophers in an array
@@ -36,6 +64,11 @@ func NewGopher(c *fiber.Ctx) error {
 	gopher := new(Gopher)
 	if err := c.BodyParser(gopher); err != nil {
 		return c.Status(503).SendString(err.Error())
+	}
+	var err error
+	gopher.Seed, err = GenerateRandomString(32)
+	if err != nil {
+		return c.Status(501).SendString(err.Error())
 	}
 	db.Create(&gopher)
 	return c.JSON(gopher)
