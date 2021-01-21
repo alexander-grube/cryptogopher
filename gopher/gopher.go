@@ -55,6 +55,9 @@ func GetGopher(c *fiber.Ctx) error {
 	db := database.DBConn
 	var gopher Gopher
 	db.Find(&gopher, id)
+	if gopher.Name == "" {
+		return c.Status(404).SendString("No Gopher Found with ID")
+	}
 	return c.JSON(gopher)
 }
 
