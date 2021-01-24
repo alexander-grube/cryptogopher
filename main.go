@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/alexander-grube/cryptogopher/database"
 	"github.com/alexander-grube/cryptogopher/gopher"
@@ -34,8 +33,9 @@ func main() {
 	initDatabase()
 
 	setupRoutes(app)
-	port := os.Getenv("PORT")
-	app.Listen(":" + port)
+	// port := os.Getenv("PORT")
+	// app.Listen(":" + port)
+	app.Listen(":8080")
 
 	defer database.DBConn.Close()
 }
