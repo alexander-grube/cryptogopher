@@ -36,7 +36,7 @@ func main() {
 	setupRoutes(app)
 	// port := os.Getenv("PORT")
 	// log.Fatal(app.Listen(":" + port))
-	log.Fatal(app.Listen(":8000"))
+	log.Fatal(app.Listen(":8080"))
 
 	defer database.DBConn.Close()
 }
