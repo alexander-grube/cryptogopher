@@ -32,11 +32,12 @@ func initDatabase() {
 func main() {
 	app := fiber.New()
 	initDatabase()
+	defer database.DBConn.Close()
 
 	setupRoutes(app)
+
 	// port := os.Getenv("PORT")
 	// log.Fatal(app.Listen(":" + port))
 	log.Fatal(app.Listen(":8080"))
 
-	defer database.DBConn.Close()
 }
