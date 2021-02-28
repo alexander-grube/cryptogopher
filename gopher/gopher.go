@@ -3,6 +3,7 @@ package gopher
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"strings"
 
 	"github.com/alexander-grube/cryptogopher/database"
 	"github.com/gofiber/fiber/v2"
@@ -14,7 +15,7 @@ import (
 type Gopher struct {
 	gorm.Model
 	Name string `json:"name"`
-	Seed string
+	Seed string `json:"seed"`
 }
 
 // GenerateRandomBytes returns securely generated random bytes.
@@ -65,6 +66,10 @@ func GetGopher(c *fiber.Ctx) error {
 func NewGopher(c *fiber.Ctx) error {
 	db := database.DBConn
 	gopher := new(Gopher)
+
+	if valid, invalidFields := checkGopher(gopher); !valid {
+		return c.Status(400).SendString("Invalid Input(" + invalidFields + ")")
+	}
 	if err := c.BodyParser(gopher); err != nil {
 		return c.Status(503).SendString(err.Error())
 	}
@@ -89,4 +94,13 @@ func DeleteGopher(c *fiber.Ctx) error {
 	}
 	db.Delete(&gopher)
 	return c.SendString("Gopher Successfully deleted")
+}
+
+func checkGopher(gopher *Gopher) (bool, string) {
+	var errors string
+	if len(strings.TrimSpace(gopher.Name)) == 0 {
+		errors += "Name, "
+		return false, errors
+	}
+	return true, errors
 }
