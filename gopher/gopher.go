@@ -67,12 +67,14 @@ func NewGopher(c *fiber.Ctx) error {
 	db := database.DBConn
 	gopher := new(Gopher)
 
-	if valid, invalidFields := checkGopher(gopher); !valid {
-		return c.Status(400).SendString("Invalid Input(" + invalidFields + ")")
-	}
 	if err := c.BodyParser(gopher); err != nil {
 		return c.Status(503).SendString(err.Error())
 	}
+
+	if valid, invalidFields := checkGopher(gopher); !valid {
+		return c.Status(400).SendString("Invalid Input(" + invalidFields + ")")
+	}
+
 	var err error
 	gopher.Seed, err = GenerateRandomString(32)
 	if err != nil {
