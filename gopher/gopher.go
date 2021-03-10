@@ -3,6 +3,7 @@ package gopher
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"fmt"
 	"strings"
 
 	"github.com/alexander-grube/cryptogopher/database"
@@ -56,6 +57,7 @@ func GetGopher(c *fiber.Ctx) error {
 	db := database.DBConn
 	var gopher Gopher
 	db.Find(&gopher, id)
+	fmt.Println(gopher)
 	if gopher.Name == "" {
 		return c.Status(404).SendString("No Gopher Found with ID")
 	}

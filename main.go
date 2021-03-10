@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"time"
 
 	"github.com/alexander-grube/cryptogopher/database"
 	"github.com/alexander-grube/cryptogopher/gopher"
@@ -17,6 +18,15 @@ func setupRoutes(app *fiber.App) {
 	app.Get("/api/v1/gopher/:id", gopher.GetGopher)
 	app.Post("/api/v1/gopher", gopher.NewGopher)
 	app.Delete("/api/v1/gopher/:id", gopher.DeleteGopher)
+
+	app.Static("/", "./static/spa", fiber.Static{
+		Compress:      true,
+		ByteRange:     true,
+		Browse:        true,
+		Index:         "index.html",
+		CacheDuration: 10 * time.Second,
+		MaxAge:        3600,
+	})
 }
 
 func initDatabase() {
@@ -39,6 +49,6 @@ func main() {
 
 	port := os.Getenv("PORT")
 	log.Fatal(app.Listen(":" + port))
-	// log.Fatal(app.Listen(":8080"))
+	//log.Fatal(app.Listen(":8080"))
 
 }
