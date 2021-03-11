@@ -52,7 +52,7 @@ func ManipulateImg(hueShift float64) {
 	dst := imaging.New(src.Bounds().Dx(), src.Bounds().Dy(), color.NRGBA{0, 0, 0, 0})
 	dst = imaging.Paste(dst, img1, image.Pt(0, 0))
 
-	err = imaging.Save(dst, "services/testdata/gopher_out_"+strconv.FormatInt(int64(hueShift), 8)+".png")
+	err = imaging.Save(dst, "services/testdata/gopher_out_"+strconv.FormatInt(int64(hueShift), 10)+".png")
 	if err != nil {
 		log.Fatalf("failed to save image: %v", err)
 	}
