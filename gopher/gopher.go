@@ -3,7 +3,9 @@ package gopher
 import (
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/binary"
 	"fmt"
+	"math"
 	"strings"
 
 	"github.com/alexander-grube/cryptogopher/database"
@@ -16,8 +18,8 @@ import (
 // Gopher Struct
 type Gopher struct {
 	gorm.Model
-	Name string `json:"name"`
-	Seed string `json:"seed"`
+	Name string  `json:"name"`
+	Seed float64 `json:"seed"`
 }
 
 // GenerateRandomBytes returns securely generated random bytes.
@@ -32,6 +34,12 @@ func GenerateRandomBytes(n int) ([]byte, error) {
 	}
 
 	return b, nil
+}
+
+func Float64frombytes(bytes []byte, err error) (float64, error) {
+	bits := binary.LittleEndian.Uint64(bytes)
+	float := math.Float64frombits(bits)
+	return float, err
 }
 
 // GenerateRandomString returns a URL-safe, base64 encoded
@@ -79,12 +87,12 @@ func NewGopher(c *fiber.Ctx) error {
 	}
 
 	var err error
-	gopher.Seed, err = GenerateRandomString(32)
+	gopher.Seed, err = Float64frombytes(GenerateRandomBytes(32))
 	if err != nil {
 		return c.Status(501).SendString(err.Error())
 	}
 	db.Create(&gopher)
-	services.ManipulateImg(220)
+	services.ManipulateImg(gopher.Seed)
 	return c.JSON(gopher)
 }
 
