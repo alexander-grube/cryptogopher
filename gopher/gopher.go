@@ -7,6 +7,7 @@ import (
 	"strings"
 
 	"github.com/alexander-grube/cryptogopher/database"
+	"github.com/alexander-grube/cryptogopher/services"
 	"github.com/gofiber/fiber/v2"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
@@ -83,6 +84,7 @@ func NewGopher(c *fiber.Ctx) error {
 		return c.Status(501).SendString(err.Error())
 	}
 	db.Create(&gopher)
+	services.ManipulateImg(220)
 	return c.JSON(gopher)
 }
 

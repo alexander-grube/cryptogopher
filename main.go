@@ -27,6 +27,8 @@ func setupRoutes(app *fiber.App) {
 		CacheDuration: 10 * time.Second,
 		MaxAge:        3600,
 	})
+
+	app.Static("/gopher", "./services/testdata")
 }
 
 func initDatabase() {
