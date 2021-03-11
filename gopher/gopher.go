@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"encoding/binary"
 	"fmt"
-	"math"
 	"strings"
 
 	"github.com/alexander-grube/cryptogopher/database"
@@ -21,8 +20,8 @@ type Gopher struct {
 	Seed float64 `json:"seed"`
 }
 
-func genRandNum(min, max int8) float64 {
-	var num int8
+func genRandNum(min, max int16) float64 {
+	var num int16
 	binary.Read(rand.Reader, binary.LittleEndian, &num)
 	return float64(num*(max-min) + min)
 }
@@ -62,7 +61,7 @@ func NewGopher(c *fiber.Ctx) error {
 	}
 
 	var err error
-	gopher.Seed = genRandNum(math.MinInt8, math.MaxInt8)
+	gopher.Seed = genRandNum(-360, 360)
 	if err != nil {
 		return c.Status(501).SendString(err.Error())
 	}
