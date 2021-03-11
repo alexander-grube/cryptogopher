@@ -2,7 +2,6 @@ package gopher
 
 import (
 	"crypto/rand"
-	"encoding/base64"
 	"encoding/binary"
 	"fmt"
 	"math"
@@ -22,34 +21,10 @@ type Gopher struct {
 	Seed float64 `json:"seed"`
 }
 
-// GenerateRandomBytes returns securely generated random bytes.
-// It will return an error if the system's secure random
-// number generator fails to function correctly, in which
-// case the caller should not continue.
-func GenerateRandomBytes(n int) ([]byte, error) {
-	b := make([]byte, n)
-	_, err := rand.Read(b)
-	if err != nil {
-		return nil, err
-	}
-
-	return b, nil
-}
-
-func Float64frombytes(bytes []byte, err error) (float64, error) {
-	bits := binary.LittleEndian.Uint64(bytes)
-	float := math.Round(math.Float64frombits(bits))
-	return float, err
-}
-
-// GenerateRandomString returns a URL-safe, base64 encoded
-// securely generated random string.
-// It will return an error if the system's secure random
-// number generator fails to function correctly, in which
-// case the caller should not continue.
-func GenerateRandomString(s int) (string, error) {
-	b, err := GenerateRandomBytes(s)
-	return base64.URLEncoding.EncodeToString(b), err
+func genRandNum(min, max int8) float64 {
+	var num int8
+	binary.Read(rand.Reader, binary.LittleEndian, &num)
+	return float64(num*(max-min) + min)
 }
 
 // GetGophers returns all Gophers in an array
@@ -87,7 +62,7 @@ func NewGopher(c *fiber.Ctx) error {
 	}
 
 	var err error
-	gopher.Seed, err = Float64frombytes(GenerateRandomBytes(32))
+	gopher.Seed = genRandNum(math.MinInt8, math.MaxInt8)
 	if err != nil {
 		return c.Status(501).SendString(err.Error())
 	}

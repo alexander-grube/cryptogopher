@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"log"
-	"os"
 	"time"
 
 	"github.com/alexander-grube/cryptogopher/database"
@@ -49,8 +48,8 @@ func main() {
 
 	setupRoutes(app)
 
-	port := os.Getenv("PORT")
-	log.Fatal(app.Listen(":" + port))
-	// log.Fatal(app.Listen(":8080"))
+	// port := os.Getenv("PORT")
+	// log.Fatal(app.Listen(":" + port))
+	log.Fatal(app.Listen(":8080"))
 
 }
