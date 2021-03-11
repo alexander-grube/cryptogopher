@@ -87,7 +87,7 @@ func NewGopher(c *fiber.Ctx) error {
 	}
 
 	var err error
-	gopher.Seed, err = Float64frombytes(GenerateRandomBytes(32))
+	gopher.Seed, err = Float64frombytes(GenerateRandomBytes(4))
 	if err != nil {
 		return c.Status(501).SendString(err.Error())
 	}
