@@ -38,7 +38,7 @@ func GenerateRandomBytes(n int) ([]byte, error) {
 
 func Float64frombytes(bytes []byte, err error) (float64, error) {
 	bits := binary.LittleEndian.Uint64(bytes)
-	float := math.Float64frombits(bits)
+	float := math.Round(math.Float64frombits(bits))
 	return float, err
 }
 
@@ -87,7 +87,7 @@ func NewGopher(c *fiber.Ctx) error {
 	}
 
 	var err error
-	gopher.Seed, err = Float64frombytes(GenerateRandomBytes(4))
+	gopher.Seed, err = Float64frombytes(GenerateRandomBytes(32))
 	if err != nil {
 		return c.Status(501).SendString(err.Error())
 	}
